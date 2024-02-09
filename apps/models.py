@@ -3,9 +3,8 @@ from datetime import timedelta
 from ckeditor.fields import RichTextField
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
-from django.contrib.postgres.fields import HStoreField
 from django.db import models
-from django.db.models import CharField, IntegerField, PositiveIntegerField, TextChoices, ForeignKey
+from django.db.models import CharField, IntegerField, PositiveIntegerField, TextChoices, ForeignKey, JSONField
 from django.db.models import SET_NULL, DecimalField
 from django.utils.timezone import now
 from django_resized import ResizedImageField
@@ -83,7 +82,7 @@ class Product(BaseModel):
     description = RichTextField()
     price = DecimalField(max_digits=9, decimal_places=2)
     discount = IntegerField(default=0)
-    specifications = HStoreField()
+    specifications = JSONField()
     shipping = DecimalField(max_digits=9, decimal_places=2)
     quantity = PositiveIntegerField(default=0)
     category = models.ForeignKey('apps.Category', models.CASCADE, 'categories')
