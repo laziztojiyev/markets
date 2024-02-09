@@ -11,6 +11,7 @@ defusedxml==0.7.1
 diff-match-patch==20230430
 Django==5.0.1
 django-admin-hstore-widget==1.2.1
+django-celery-results==2.5.1
 django-ckeditor==6.7.0
 django-environ==0.11.2
 django-import-export==3.3.6
