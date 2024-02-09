@@ -1,0 +1,140 @@
+{% extends 'apps/base.html' %}
+{% load static %}
+{% load custom_tags %}
+
+{% block content %}
+    <div class="card mb-3">
+        <div class="card-body">
+            <div class="row flex-between-center">
+                <div class="col-sm-auto mb-2 mb-sm-0">
+                    <h6 class="mb-0">Showing {{ page_obj.start_index }}-{{ page_obj.end_index }}
+                        of {{ page_obj.paginator.count }} Products</h6>
+                </div>
+                <div class="col-sm-auto">
+                    <div class="row gx-2 align-items-center">
+                        <div class="col-auto">
+                            <form class="row gx-2">
+                                <div class="col-auto"><small>Sort by:</small></div>
+                                <div class="col-auto">
+                                    <select class="form-select form-select-sm" aria-label="Bulk actions">
+                                        <option selected="">Best Match</option>
+                                        <option value="Refund">Newest</option>
+                                        <option value="Delete">Price</option>
+                                    </select>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-auto pe-0"><a class="text-600 px-1"
+                                                      href="app/e-commerce/product/product-list.html"
+                                                      data-bs-toggle="tooltip" data-bs-placement="top"
+                                                      title="Product List"><span
+                                class="fas fa-list-ul"></span></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card mb-3">
+        <div class="card-body">
+            <div class="row">
+                {% for product in product_list %}
+                    <div class="mb-4 col-md-6 col-lg-4">
+                        <div class="border rounded-1 h-100 d-flex flex-column justify-content-between pb-3">
+                            <div class="overflow-hidden">
+                                <div class="position-relative rounded-top overflow-hidden"><a
+                                        class="d-block"
+                                        href="{% url 'product_detail' product.id %}"><img
+                                        class="img-fluid rounded-top"
+                                        src="{{ product.images.first.image.url }}"
+                                        {% if product.is_new %}
+                                        alt=""/></a><span
+                                                class="badge rounded-pill bg-success position-absolute mt-2 me-2 z-index-2 top-0 end-0">New</span>
+                                        {% else %}
+                                            alt=""/></a><span
+                                                class="badge rounded-pill bg-success position-absolute mt-2 me-2 z-index-2 top-0 end-0"></span>
+                                        {% endif %}
+                                </div>
+                                <div class="p-3">
+                                    <h5 class="fs-0"><a class="text-dark"
+                                                        href="{% url 'product_detail' product.id %}">{{ product.name }}</a>
+                                    </h5>
+                                    <p class="fs--1 mb-3"><a class="text-500"
+                                                             href="#!">{{ product.category }}</a></p>
+                                    <p>
+                                        {% for key, value in product.specifications.items|custom_slice:"0:3" %}
+                                            <p>{{ key }}: {{ value }}</p>
+                                        {% endfor %}
+
+                                    </p>
+                                    <h5 class="fs-md-2 text-warning mb-0 d-flex align-items-center mb-3">
+                                        {{ product.sell_price }}
+                                        <del class="ms-2 fs--1 text-500">{{ product.price }}</del>
+                                    </h5>
+                                    <p class="fs--1 mb-1">Shipping Cost:
+                                        <strong>{{ product.shipping }}</strong></p>
+                                    <p class="fs--1 mb-1">Stock:
+                                        {% if product.stock %}
+                                            <strong class="text-success">Available
+                                        {% else %}
+                                            <strong class="text-danger">Sold-out
+                                        {% endif %}</strong>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="d-flex flex-between-center px-3">
+                                <div><span class="fa fa-star text-warning"></span><span
+                                        class="fa fa-star text-warning"></span><span
+                                        class="fa fa-star text-warning"></span><span
+                                        class="fa fa-star text-warning"></span><span
+                                        class="fa fa-star text-300"></span><span class="ms-1">(8)</span>
+                                </div>
+                                <div>
+                                    <a class="btn btn-sm btn-falcon-default me-2"
+                                       {% if user.id|has_wishlist:product.id %} style="background-color: red; color : white"
+                                       {% else %} style="background-color: white; color:black"
+                                       {% endif %}
+                                            {% if user.is_authenticated %}
+                                       href="{% url 'wishlist_create' product.id %}"
+                                            {% else %}
+                                       href="{% url 'login' %}"
+                                            {% endif %}
+                                       data-bs-toggle="tooltip" data-bs-placement="top"
+                                       title="Add to Wish List">
+                                        <span class="far fa-heart"></span>
+                                    </a>
+                                    <a class="btn btn-sm btn-falcon-default" href="#!"
+                                       data-bs-toggle="tooltip"
+                                       data-bs-placement="top" title="Add to Cart">
+                                        <span class="fas fa-cart-plus"></span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="card-footer bg-light d-flex justify-content-center">
+            <div>
+                {% if page_obj.has_previous %}
+                    <a class="btn btn-sm btn-falcon-default me-2" href="?page={{ page_obj.previous_page_number }}">
+                        <span class="fas fa-chevron-left"></span>
+                    </a>
+                    <a class="btn btn-sm btn-falcon-default me-2" href="?page={{ page_obj.previous_page_number }}">
+                        {{ page_obj.previous_page_number }}
+                    </a>
+                {% endif %}
+                <a class="btn btn-sm btn-falcon-default text-primary me-2" href="#">{{ page_obj.number }}</a>
+                {% if page_obj.has_next %}
+                    <a class="btn btn-sm btn-falcon-default me-2" href="?page={{ page_obj.next_page_number }}">
+                        {{ page_obj.next_page_number }}
+                    </a>
+                    <a class="btn btn-sm btn-falcon-default me-2" href="?page={{ page_obj.next_page_number }}">
+                        <span class="fas fa-chevron-right"></span>
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
