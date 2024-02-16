@@ -6,6 +6,7 @@ from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.urls import path, include
 
+from apps.tasks import custom_task, send_to_email
 # from apps.tasks import custom_task, send_to_email
 from root.settings import STATIC_URL, STATIC_ROOT, MEDIA_URL, MEDIA_ROOT
 

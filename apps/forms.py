@@ -49,3 +49,13 @@ class OrderModelForm(ModelForm):
         return phone_number
 
 
+class UserSettingsForm(ModelForm):
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'email', 'phone_number', 'intro']
+
+
+# class ChangePasswordForm(ModelForm):
+#     class Meta:
+#         model = User
+#         fields = ['old_password', 'new_password1', 'new_password2']

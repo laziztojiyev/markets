@@ -4,7 +4,8 @@ from ckeditor.fields import RichTextField
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django.db.models import CharField, IntegerField, PositiveIntegerField, TextChoices, ForeignKey, JSONField
+from django.db.models import CharField, IntegerField, PositiveIntegerField, TextChoices, ForeignKey, JSONField, \
+    BooleanField, TextField
 from django.db.models import SET_NULL, DecimalField
 from django.utils.timezone import now
 from django_resized import ResizedImageField
@@ -53,13 +54,13 @@ class User(AbstractUser):
         MANAGER = "manager", "Menejer"
 
     type = CharField(max_length=25, choices=Type.choices, default=Type.USERS)
-    intro = CharField(max_length=1024)
-    avatar = ResizedImageField(size=[168, 168], upload_to='user_avatars/')
-    banner = ResizedImageField(size=[1198, 124], upload_to='user_banners/')
+    intro = TextField(max_length=1024,null=True,blank=True)
+    avatar = ResizedImageField(size=[168, 168], upload_to='user_avatars/', null=True, blank=True, default='user_avatars/avatar_default.jpeg')
+    banner = ResizedImageField(size=[1198, 124], upload_to='user_banners/', null=True, blank=True, default='user_avatars/banner_default.jpg')
     workout = CharField(max_length=50)
     country = CharField(max_length=30)
-    verified = models.BooleanField(default=False)
-
+    is_verified = BooleanField(default=False)
+    phone_number = CharField(max_length=25)
     class Meta:
         verbose_name = 'Foydalanuvchi'
         verbose_name_plural = 'Foydalanuvchilar'

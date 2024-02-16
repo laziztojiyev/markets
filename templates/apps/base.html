@@ -2467,7 +2467,7 @@
                                                             <div class="notification-avatar">
                                                                 <div class="avatar avatar-xl me-3">
                                                                     <img class="rounded-circle"
-                                                                         src="{{ user.avatar.url }}" alt="">
+                                                                         src="" alt="">
 
                                                                 </div>
                                                             </div>
@@ -2490,7 +2490,6 @@
                                                                 <div class="avatar avatar-xl me-3">
                                                                     <img class="rounded-circle"
                                                                          src="{{ user.avatar.url }}" alt="">
-
                                                                 </div>
                                                             </div>
                                                             <div class="notification-body">
@@ -2534,8 +2533,12 @@
                                                      role="button" data-bs-toggle="dropdown" aria-haspopup="true"
                                                      aria-expanded="false">
                         <div class="avatar avatar-xl">
-                            <img class="rounded-circle" src="{{ user.avatar.url }}" alt="">
-
+                            {% if not user.avatar %}
+                                <img class="rounded-circle"
+                                     src="{% static 'apps/assets/img/user_default/avatar_default.jpeg' %}" alt="">
+                            {% else %}
+                                <img class="rounded-circle" src="{{ user.avatar.url }}" alt="">
+                            {% endif %}
                         </div>
                     </a>
                         <div class="dropdown-menu dropdown-menu-end py-0" aria-labelledby="navbarDropdownUser">
@@ -2549,10 +2552,10 @@
                                     </svg>
                                     <!-- <span class="fas fa-crown me-1"></span> Font Awesome fontawesome.com --><span>{{ user.email }}</span></a>
 
-{#                                <div class="dropdown-divider"></div>#}
-{#                                <a class="dropdown-item" href="#!">Set status</a>#}
-{#                                <a class="dropdown-item" href="pages/user/profile.html">Profile &amp; account</a>#}
-{#                                <a class="dropdown-item" href="#!">Feedback</a>#}
+                                {#                                <div class="dropdown-divider"></div>#}
+                                {#                                <a class="dropdown-item" href="#!">Set status</a>#}
+                                {#                                <a class="dropdown-item" href="pages/user/profile.html">Profile &amp; account</a>#}
+                                {#                                <a class="dropdown-item" href="#!">Feedback</a>#}
 
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href={% url 'user_profile' %}>Settings</a>
@@ -2668,5 +2671,15 @@
             </div>
         </div>
     </div>
+    <script src="{% static 'apps/assets/js/theme.js' %}"></script>
+    <script src="https://unpkg.com/imask"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://rawgit.com/RobinHerbots/jquery.inputmask/3.x/dist/jquery.inputmask.bundle.js"></script>
+    <script>
+        $('#phone-mask').inputmask({
+            "mask": "+\\9\\98(99) 999-99-99"
+        });
+        $('#messages-modal').modal('show');
+    </script>
 
 {% endblock %}

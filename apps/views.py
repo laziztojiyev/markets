@@ -1,12 +1,13 @@
-from django.contrib.auth import authenticate, login
+from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import PasswordChangeView
 from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
 from django.views import View
-from django.views.generic import ListView, TemplateView, FormView, DetailView, CreateView
+from django.views.generic import ListView, TemplateView, FormView, DetailView, UpdateView
 
-from apps.forms import UserRegistrationForm, OrderModelForm
+from apps.forms import UserRegistrationForm, OrderModelForm, UserSettingsForm
 from apps.models import Product, User, ProductImage, WishList
 from apps.tasks import send_to_email
 
@@ -26,7 +27,6 @@ class ProductListView(ListView):
 class ProductDetailView(DetailView):
     model = Product
     template_name = 'apps/product/product_detail.html'
-
 
 class ProductImageView(TemplateView):
     model = ProductImage
@@ -106,3 +106,32 @@ class OrderView(FormView):
 
 class OrderedTemplateView(TemplateView):
     template_name = 'apps/product/ordered.html'
+
+
+class ErrorPage404View(TemplateView):
+    template_name = 'apps/errors/error_404.html'
+
+
+class ErrorPage500View(TemplateView):
+    template_name = 'apps/errors/error_500.html'
+
+
+class UserUpdateView(UpdateView):
+    form_class = UserSettingsForm
+    template_name = 'apps/auth/profile.html'
+    success_url = reverse_lazy('login')
+
+    def get_object(self, queryset=None):
+        return self.request.user
+
+    def form_invalid(self, form):
+        return super().form_invalid(form)
+
+
+class ChangePasswordView(PasswordChangeView):
+    form_class = PasswordChangeForm
+    template_name = 'apps/auth/profile.html'
+    success_url = reverse_lazy('login')
+
+    def form_invalid(self, form):
+        return super().form_invalid(form)

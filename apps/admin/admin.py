@@ -10,6 +10,8 @@ from mptt.admin import DraggableMPTTAdmin
 
 from apps.models import Product, Category, ProductImage, User
 from apps.resources import ProductModelResource
+
+
 # from apps.tasks import send_new_product_notification
 
 
@@ -49,7 +51,8 @@ class ProductAdmin(ImportExportModelAdmin):
         return mark_safe(obj.description)
 
     inlines = (ProductImageStackedInline,)
-    list_display = ['id', 'name', 'form_description', 'price', 'category', 'image_show', 'created_at_product']
+    list_display = ['id', 'name', 'form_description', 'price', 'quantity', 'category', 'image_show',
+                    'created_at_product']
     search_fields = ['id', 'name']
     list_per_page = 10
     list_max_show_all = 20
