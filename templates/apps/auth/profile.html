@@ -8,7 +8,7 @@
                 <div class="card-header position-relative min-vh-25 mb-8">
                     <div class="cover-image">
                         <div class="bg-holder rounded-3 rounded-bottom-0"
-                             style="background-image:url({{user.banner.url}});">
+                             style="background-image:url({{ user.banner.url }});">
                         </div>
                         <!--/.bg-holder-->
 
@@ -41,9 +41,10 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-lg-8">
-                            <h4 class="mb-1">{{ user.first_name }}<span data-bs-toggle="tooltip" data-bs-placement="right"
-                                                                   title="" data-bs-original-title="Verified"
-                                                                   aria-label="Verified"><svg
+                            <h4 class="mb-1">{{ user.first_name }}<span data-bs-toggle="tooltip"
+                                                                        data-bs-placement="right"
+                                                                        title="" data-bs-original-title="Verified"
+                                                                        aria-label="Verified"><svg
                                     class="svg-inline--fa fa-check-circle fa-w-16 text-primary"
                                     data-fa-transform="shrink-4 down-2" aria-hidden="true" focusable="false"
                                     data-prefix="fa" data-icon="check-circle" role="img"
@@ -74,27 +75,32 @@
                         {% csrf_token %}
                         <div class="col-lg-6">
                             <label class="form-label" for="first-name">First Name</label>
-                            <input class="form-control" id="first-name" name="first_name" type="text" placeholder="Ism" value="{{ user.first_name }}">
+                            <input class="form-control" id="first-name" name="first_name" type="text" placeholder="Ism"
+                                   value="{{ user.first_name }}">
                         </div>
                         <div class="col-lg-6">
                             <label class="form-label" for="last-name">Last Name</label>
-                            <input class="form-control" id="last-name" name="last_name" type="text" placeholder="Familya" value="{{ user.last_name }}">
+                            <input class="form-control" id="last-name" name="last_name" type="text"
+                                   placeholder="Familya" value="{{ user.last_name }}">
                         </div>
                         <div class="col-lg-6">
                             <label class="form-label" for="email1">Email</label>
-                            <input class="form-control" id="email1" name="email" type="text" placeholder="example@gmail.com" value="{{ user.email }}">
+                            <input class="form-control" id="email1" name="email" type="text"
+                                   placeholder="example@gmail.com" value="{{ user.email }}">
                         </div>
                         <div class="col-lg-6">
                             <label class="form-label" for="email2">Phone</label>
-                            <input class="form-control" id="phone-mask" required="" name="phone_number" type="text" value="{{ user.phone_number }}">
+                            <input class="form-control" id="phone-mask" required="" name="phone_number" type="text"
+                                   value="{{ user.phone_number }}">
                         </div>
-{#                        <div class="col-lg-12">#}
-{#                            <label class="form-label" for="email3">Heading</label>#}
-{#                            <input class="form-control" id="email3" type="text" placeholder="">#}
-{#                        </div>#}
+                        {#                        <div class="col-lg-12">#}
+                        {#                            <label class="form-label" for="email3">Heading</label>#}
+                        {#                            <input class="form-control" id="email3" type="text" placeholder="">#}
+                        {#                        </div>#}
                         <div class="col-lg-12">
                             <label class="form-label" for="intro">Intro</label>
-                            <textarea class="form-control" id="intro" name="intro" cols="30" rows="13" value="{{ user.intro }}"></textarea>
+                            <textarea class="form-control" id="intro" name="intro" cols="30" rows="13"
+                                      value="{{ user.intro }}"></textarea>
                         </div>
                         <div class="col-12 d-flex justify-content-end">
                             <button class="btn btn-primary" type="submit">Update</button>
@@ -510,7 +516,7 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label" for="confirm-password">Confirm Password</label>
-                                <input class="form-control" id="confirm-password" name="new_password2" type="password" >
+                                <input class="form-control" id="confirm-password" name="new_password2" type="password">
                             </div>
                             <button class="btn btn-primary d-block w-100" type="submit">Update Password</button>
                         </form>
@@ -523,9 +529,9 @@
                     <div class="card-body bg-light">
 
 
-
                         <h5 class="fs-0">Delete this account</h5>
-                        <p class="fs--1">Once you delete a account, there is no going back. Please be certain.</p><a class="btn btn-falcon-danger d-block" href="#!">Deactivate Account</a>
+                        <p class="fs--1">Once you delete a account, there is no going back. Please be certain.</p><a
+                            class="btn btn-falcon-danger d-block" href="#!">Deactivate Account</a>
                     </div>
                 </div>
             </div>

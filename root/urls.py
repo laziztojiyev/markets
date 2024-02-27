@@ -16,7 +16,6 @@ def custom_logout(request):
     return redirect('product_list')
 
 
-
 def create_check_task(r):
     task_result = custom_task.delay()
     response = {
@@ -34,17 +33,19 @@ def custom_check_task(r, task_id):
     }
     return JsonResponse(response)
 
+
 def view_test(request):
     send_to_email.delay(['dilmurod.xolmatovrg@gmail.com'], 'botirjon')
     # send_to_email()
     return JsonResponse({'msg': 'msg'})
 
+
 urlpatterns = [
-    path('test', view_test),
-    path('create', create_check_task),
-    path('check/<task_id>', custom_check_task),
-    path('admin/logout/', custom_logout),
-    path('admin/logout/', custom_logout),
-    path('admin/', admin.site.urls),
-    path('', include('apps.urls')),
-] + static(STATIC_URL, document_root=STATIC_ROOT) + static(MEDIA_URL, document_root=MEDIA_ROOT)
+                  path('test', view_test),
+                  path('create', create_check_task),
+                  path('check/<task_id>', custom_check_task),
+                  path('admin/logout/', custom_logout),
+                  path('admin/logout/', custom_logout),
+                  path('admin/', admin.site.urls),
+                  path('', include('apps.urls')),
+              ] + static(STATIC_URL, document_root=STATIC_ROOT) + static(MEDIA_URL, document_root=MEDIA_ROOT)

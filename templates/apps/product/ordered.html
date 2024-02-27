@@ -1,72 +1,48 @@
 {% extends 'apps/base.html' %}
 {% load static %}
 {% block content %}
-        <div class="card">
-            <div class="card-body text-center py-5">
-                <div class="row justify-content-center">
-                    <div class="col-7 col-md-5"><img class="img-fluid"
-                                                     src="{% static 'apps/assets/img/icons/spot-illustrations/41.png' %}"
-                                                     alt="" style="width:58%;"></div>
-                </div>
 
-                <p class="lead mb-5">Sizning so`rovingiz qabul qilindi. 5-10 daqiqa ichida bizning hodimlarimiz siz bilan albatta bog`lanadi</p>
-                <div class="row justify-content-center">
-                    <div class="col-md-7">
-                        <form class="row gx-2">
-                            <div class="col-sm mb-2 mb-sm-0">
-
-                            </div>
-                            <div class="col-sm-auto">
-                                <div class="btn btn-primary d-block w-100"><a class="btn btn-sm btn-primary"
-                                                                              href="{% url 'product_list' %}"><span
-                                        class="d-none d-sm-inline-block">Bosh sahifaga qaytish</span></a></div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
+    <div class="container text-center pb-5 card" style="margin-top: 80px;">
+        <div class="card-body" style="margin-top: 30px">
 
         </div>
-{#    <div class="container text-center pb-5 card" style="margin-top: 80px;">#}
-{#        <div class="card-body" style="margin-top: 30px">#}
-{##}
-{#        </div>#}
-{##}
-{#        <img style="height: 100px; width:100px; margin-left:45%; margin-top: 30px" src="{% static 'apps/assets/img/icons/success_icon.png' %}"#}
-{#             alt="Green Success Image">#}
-{#        <h3 class="mt-4">Arizangiz qabul qilindi!</h3>#}
-{#        <p>Batafsil ma'lumot uchun operator yaqin vaqt ichida siz bilan aloqaga chiqadi.</p>#}
-{#        <p>Iltimos, telefoningiz yoqilgan holda bo'lsin!</p>#}
-{#        <table class="table">#}
-{#            <thead>#}
-{#            <tr>#}
-{#                <th scope="col">Mahsulot</th>#}
-{#                <th scope="col">Summa</th>#}
-{#                <th scope="col">Soni</th>#}
-{#            </tr>#}
-{#            </thead>#}
-{#            <tbody>#}
-{#            <tr>#}
-{#                <th scope="col">Genger sovun</th>#}
-{#                <th scope="col">59000</th>#}
-{#                <th scope="col">1</th>#}
-{#            </tr>#}
-{##}
-{#            <tr>#}
-{#                <th scope="col">Yetkazib berish</th>#}
-{#                <th scope="col">30000</th>#}
-{#            </tr>#}
-{##}
-{#            </tbody>#}
-{#        </table>#}
-{#        <div class="row">#}
-{#            <div class="col-md-6">#}
-{#                <h5>Jami</h5>#}
-{#                <h5>89000 so'm</h5>#}
-{#            </div>#}
-{#            <div class="col-md-6 mt-3">#}
-{#                <a href="/" class="btn btn-primary w-50">Boshqa mahsulotlar</a>#}
-{#            </div>#}
-{#        </div>#}
-{#    </div>#}
+
+        <img style="height: 100px; width:100px; margin-left:45%; margin-top: 30px"
+             src="{% static 'apps/assets/img/icons/success_icon.png' %}"
+             alt="Green Success Image">
+        <h3 class="mt-4">Arizangiz qabul qilindi!</h3>
+        <p>Batafsil ma'lumot uchun operator yaqin vaqt ichida siz bilan aloqaga chiqadi.</p>
+        <p>Iltimos, telefoningiz yoqilgan holda bo'lsin!</p>
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Mahsulot</th>
+                <th scope="col">Summa</th>
+                <th scope="col">Soni</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <th scope="col">{{ order.product.name }}</th>
+                <th scope="col">{{ order.product.price }}</th>
+                <th scope="col">1</th>
+            </tr>
+
+            <tr>
+                <th scope="col">Yetkazib berish</th>
+                <th scope="col">{{ delivery_price }}</th>
+            </tr>
+
+            </tbody>
+        </table>
+        <div class="row">
+            <div class="col-md-6">
+                <h5>Jami</h5>
+                <h5>{{ delivery_price|add:order.product.price }} so'm</h5>
+            </div>
+            <div class="col-md-6 mt-3">
+                <a href="/" class="btn btn-primary w-50">Boshqa mahsulotlar</a>
+            </div>
+        </div>
+    </div>
 {% endblock %}

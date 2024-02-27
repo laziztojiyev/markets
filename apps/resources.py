@@ -6,4 +6,3 @@ from apps.models import Product
 class ProductModelResource(ModelResource):
     class Meta:
         model = Product
-

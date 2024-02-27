@@ -2327,7 +2327,7 @@
                 {% if user.is_authenticated %}
                     <li class="nav-item">
                         <a class="nav-link px-0 notification-indicator notification-indicator-warning notification-indicator-fill fa-icon-wait"
-                           href="app/e-commerce/shopping-cart.html">
+                           href="{% url 'wishlists' %}">
                             <svg class="svg-inline--fa fa-shopping-cart fa-w-18" data-fa-transform="shrink-7"
                                  style="font-size: 33px;transform-origin: 0.5625em 0.5em;" aria-hidden="true"
                                  focusable="false" data-prefix="fas" data-icon="shopping-cart" role="img"
@@ -2681,5 +2681,18 @@
         });
         $('#messages-modal').modal('show');
     </script>
-
+    <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+    <script src="https://unpkg.com/multiple-select@1.5.2/dist/multiple-select.min.js"></script>
+    <script src="/static/app/js/regions_filter.js"></script>
+    <script>
+        $(function () {
+            $('select').multipleSelect({
+                multiple: true,
+                multipleWidth: 500,
+                maxHeight: 200,
+                maxHeightUnit: 50,
+                filter: true
+            })
+        })
+    </script>
 {% endblock %}

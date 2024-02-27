@@ -3,21 +3,21 @@ from datetime import timedelta
 from ckeditor.fields import RichTextField
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
-from django.db import models
 from django.db.models import CharField, IntegerField, PositiveIntegerField, TextChoices, ForeignKey, JSONField, \
-    BooleanField, TextField
+    BooleanField, TextField, Model, CASCADE, DateTimeField
 from django.db.models import SET_NULL, DecimalField
 from django.utils.timezone import now
 from django_resized import ResizedImageField
+from mptt import querysets
 from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
 
 from apps.tasks import send_new_product_notification
 
 
-class BaseModel(models.Model):
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+class BaseModel(Model):
+    created_at = DateTimeField(auto_now_add=True)
+    updated_at = DateTimeField(auto_now=True)
 
     def created_at_product(self):
         return self.created_at.strftime("%d.%m.%Y")
@@ -54,13 +54,16 @@ class User(AbstractUser):
         MANAGER = "manager", "Menejer"
 
     type = CharField(max_length=25, choices=Type.choices, default=Type.USERS)
-    intro = TextField(max_length=1024,null=True,blank=True)
-    avatar = ResizedImageField(size=[168, 168], upload_to='user_avatars/', null=True, blank=True, default='user_avatars/avatar_default.jpeg')
-    banner = ResizedImageField(size=[1198, 124], upload_to='user_banners/', null=True, blank=True, default='user_avatars/banner_default.jpg')
+    intro = TextField(max_length=1024, null=True, blank=True)
+    avatar = ResizedImageField(size=[168, 168], upload_to='user_avatars/', null=True, blank=True,
+                               default='user_avatars/avatar_default.jpeg')
+    banner = ResizedImageField(size=[1198, 124], upload_to='user_banners/', null=True, blank=True,
+                               default='user_avatars/banner_default.jpg')
     workout = CharField(max_length=50)
     country = CharField(max_length=30)
     is_verified = BooleanField(default=False)
     phone_number = CharField(max_length=25)
+
     class Meta:
         verbose_name = 'Foydalanuvchi'
         verbose_name_plural = 'Foydalanuvchilar'
@@ -69,6 +72,7 @@ class User(AbstractUser):
 class Category(MPTTModel):
     name = CharField(max_length=25)
     parent = TreeForeignKey('self', SET_NULL, 'category', null=True, blank=True)
+    image = ResizedImageField(size=[100, 100], upload_to='category_images/', null=True, blank=True)
 
     class Meta:
         verbose_name = 'Kategoriya'
@@ -83,10 +87,10 @@ class Product(BaseModel):
     description = RichTextField()
     price = DecimalField(max_digits=9, decimal_places=2)
     discount = IntegerField(default=0)
-    specifications = JSONField()
+    specifications = JSONField(blank=True)
     shipping = DecimalField(max_digits=9, decimal_places=2)
     quantity = PositiveIntegerField(default=0)
-    category = models.ForeignKey('apps.Category', models.CASCADE, 'categories')
+    category = ForeignKey('apps.Category', CASCADE, 'categories')
 
     class Meta:
         verbose_name = 'Mahsulot'
@@ -100,9 +104,9 @@ class Product(BaseModel):
     @property
     def stock(self):
         if self.quantity > 0:
-            return "Available"
+            return "Sotuvda bor"
         else:
-            return "Sold-out"
+            return "Sotuvda yo`q"
 
     def __str__(self):
         return self.name
@@ -120,21 +124,35 @@ class Product(BaseModel):
         return self.price - self.discount_price
 
 
-class ProductImage(models.Model):
+class ProductImage(Model):
     image = ResizedImageField(size=[1098, 717], upload_to='product_images/', null=True, blank=True)
-    product = models.ForeignKey('apps.Product', models.CASCADE, related_name='images')
+    product = ForeignKey('apps.Product', CASCADE, related_name='images')
 
     def __repr__(self):
         return self.product.name
 
 
-class WishList(models.Model):
-    user = ForeignKey('apps.User', on_delete=models.CASCADE, related_name='wishlists')
-    product = ForeignKey('apps.Product', on_delete=models.CASCADE)
-    added_at = models.DateTimeField(auto_now_add=True)
+class WishList(Model):
+    user = ForeignKey('apps.User', CASCADE, related_name='wishlists')
+    product = ForeignKey('apps.Product', CASCADE)
+    added_at = DateTimeField(auto_now_add=True)
 
 
-class Order(models.Model):
-    name = models.CharField(max_length=20)
-    phone_number = models.CharField(max_length=20)
-    product = models.ForeignKey('apps.Product', models.CASCADE)
+class Order(BaseModel):
+    name = CharField(max_length=20)
+    quantity = IntegerField(default=0)
+    phone_number = CharField(max_length=20)
+    product = ForeignKey('apps.Product', CASCADE)
+
+
+class SiteSettings(Model):
+    delivery_price = DecimalField(max_digits=9, decimal_places=2)
+
+
+class Region(Model):
+    name = CharField(max_length=30)
+
+
+class District(Model):
+    name = CharField(max_length=30)
+    region = ForeignKey('apps.Region', CASCADE)

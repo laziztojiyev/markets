@@ -1,14 +1,14 @@
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import PasswordChangeView
 from django.shortcuts import redirect
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import ListView, TemplateView, FormView, DetailView, UpdateView
 
 from apps.forms import UserRegistrationForm, OrderModelForm, UserSettingsForm
-from apps.models import Product, User, ProductImage, WishList
+from apps.models import Product, User, SiteSettings, Order, Category
+from apps.models import ProductImage, WishList
 from apps.tasks import send_to_email
 
 
@@ -23,31 +23,21 @@ class ProductListView(ListView):
     template_name = 'apps/product/product_grid.html'
     context_object_name = 'product_list'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = Category.objects.all()
+        return context
+
 
 class ProductDetailView(DetailView):
     model = Product
     template_name = 'apps/product/product_detail.html'
 
+
 class ProductImageView(TemplateView):
     model = ProductImage
     template_name = 'apps/product/product_detail.html'
     context_object_name = 'product_image'
-
-
-# class LoginFormView(FormView):
-#     model = User
-#     template_name = 'apps/auth/login.html'
-#     context_object_name = 'login'
-#     form_class = LoginAuthenticationForm
-#
-#     def form_valid(self, form):
-#         email = form.data['email']
-#         password = form.data['password']
-#         user = authenticate(self.request, email=email, password=password)
-#         if user:
-#             login(self.request, user)
-#             return redirect('product_list')
-#         return super().form_valid(form)
 
 
 class LogoutView(ListView):
@@ -82,7 +72,7 @@ class UserTemplateView(LoginRequiredMixin, TemplateView):
 class WishlistView(View):
 
     def get(self, request, *args, **kwargs):
-        product_id = kwargs['product_id']
+        product_id = kwargs.get('product_id')
         wishlist, created = WishList.objects.get_or_create(user=request.user, product_id=product_id)
         if not created:
             wishlist.delete()
@@ -94,18 +84,22 @@ class OrderView(FormView):
     template_name = 'apps/product/product_detail.html'
 
     def form_valid(self, form):
-        form.save()
-        return super().form_valid(form)
-
-    def form_invalid(self, form):
-        return redirect(reverse('product_detail', kwargs={'pk': self.request.POST.get('product_id')}))
-
-    def get_success_url(self):
-        return reverse('product_detail', kwargs={'pk': self.request.POST.get('product')})
+        order = form.save()
+        order.product.quantity -= order.quantity
+        order.product.save()
+        return redirect('ordered', order.id)
 
 
-class OrderedTemplateView(TemplateView):
+class OrderedDetailView(DetailView):
     template_name = 'apps/product/ordered.html'
+    queryset = Order.objects.all()
+    context_object_name = 'order'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        site_settings = SiteSettings.objects.first()
+        context['delivery_price'] = site_settings.delivery_price
+        return context
 
 
 class ErrorPage404View(TemplateView):
@@ -135,3 +129,31 @@ class ChangePasswordView(PasswordChangeView):
 
     def form_invalid(self, form):
         return super().form_invalid(form)
+
+
+class WishlistPageView(ListView):
+    model = WishList
+    template_name = 'apps/auth/wishlist_page.html'
+    context_object_name = 'wishlists'
+
+    def get_queryset(self):
+        return WishList.objects.filter(user=self.request.user)
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(object_list=object_list, **kwargs)
+        context['total_sum'] = sum(self.get_queryset().values_list('product__price', flat=True))
+        return context
+
+
+class DeleteWishlistView(View):
+
+    def get(self, request, pk=None):
+        WishList.objects.filter(user_id=self.request.user.id, product_id=pk).delete()
+        return redirect('wishlists')
+
+
+class OperatorView(ListView):
+    model = WishList
+    template_name = 'apps/auth/operators.html'
+    context_object_name = 'operator'
+

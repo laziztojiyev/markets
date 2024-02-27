@@ -1,9 +1,8 @@
 import re
 
 from django import forms
-from django.contrib.auth import authenticate
 from django.core.exceptions import ValidationError
-from django.forms import ModelForm, EmailField, CharField
+from django.forms import ModelForm
 
 from apps.models import User, Order
 
@@ -40,7 +39,7 @@ class UserRegistrationForm(ModelForm):
 class OrderModelForm(ModelForm):
     class Meta:
         model = Order
-        fields = ('name', 'phone_number', 'product')
+        fields = ('name', 'quantity', 'phone_number', 'product')
 
     def clean_phone_number(self):
         phone_number = self.cleaned_data['phone_number']
@@ -48,14 +47,10 @@ class OrderModelForm(ModelForm):
             raise forms.ValidationError("Invalid phone number format. Please use the format +998(__) ___-__ - __")
         return phone_number
 
+    ValidationError("Requested quantity exceeds available quantity")
+
 
 class UserSettingsForm(ModelForm):
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'email', 'phone_number', 'intro']
-
-
-# class ChangePasswordForm(ModelForm):
-#     class Meta:
-#         model = User
-#         fields = ['old_password', 'new_password1', 'new_password2']

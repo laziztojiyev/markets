@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
 from apps.models import User
-from apps.proxies import OperatorProxy, AdminProxy, CurrierProxy, UserProxy, ManageerProxy
+from apps.proxies import OperatorProxy, AdminProxy, CurrierProxy, ManageerProxy
 
 
 @admin.register(AdminProxy)
@@ -39,4 +39,4 @@ class ManageerProxyModelAdmin(UserAdmin):
     list_display = ['username']
 
     def get_queryset(self, request):
-        return super().get_queryset(request).filter(type=User.Type.MANAGEER)
+        return super().get_queryset(request).filter(type=User.Type.MANAGER)

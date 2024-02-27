@@ -1,18 +1,14 @@
 from django import forms
 from django.contrib import admin
-from django.contrib.admin import StackedInline
+from django.contrib.admin import StackedInline, ModelAdmin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import Group
-from django.urls import reverse
 from django.utils.safestring import mark_safe
 from import_export.admin import ImportExportModelAdmin
 from mptt.admin import DraggableMPTTAdmin
 
-from apps.models import Product, Category, ProductImage, User
+from apps.models import Product, Category, ProductImage, User, SiteSettings
 from apps.resources import ProductModelResource
-
-
-# from apps.tasks import send_new_product_notification
 
 
 class CategoryModelForm(forms.ModelForm):
@@ -25,17 +21,6 @@ class CategoryModelForm(forms.ModelForm):
 class CategoryMPTTModelAdmin(DraggableMPTTAdmin):
     mptt_level_indent = 20
     form = CategoryModelForm
-
-
-# class ProductModelForm(forms.ModelForm):
-#     specifications = HStoreFormField()
-#
-#     def clean(self):
-#         return super().clean()
-#
-#     class Meta:
-#         model = Product
-#         exclude = ()
 
 
 class ProductImageStackedInline(StackedInline):
@@ -60,7 +45,7 @@ class ProductAdmin(ImportExportModelAdmin):
 
     def response_post_save_add(self, request, obj):
         result = super().response_post_save_add(request, obj)
-        url = request.build_absolute_uri(reverse('product_detail', kwargs={'pk': obj.pk}))
+        # url = request.build_absolute_uri(reverse('product_detail', kwargs={'pk': obj.pk}))
         # send_new_product_notification.delay(product_name=obj.name, url=url)
         return result
 
@@ -87,7 +72,7 @@ class BaseUserAdmin(UserAdmin):
     fieldsets = (
         (None, {'fields': ('username', 'password')}),
         (('Personal info'),
-         {'fields': ('first_name', 'last_name', 'email', 'avatar', 'workout', 'country', 'verified', 'banner')}),
+         {'fields': ('first_name', 'last_name', 'email', 'avatar', 'workout', 'country', 'is_verified', 'banner')}),
         (('Permissions'), {
             'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions'),
         }),
@@ -96,13 +81,24 @@ class BaseUserAdmin(UserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('username', 'password1', 'password2', 'avatar'),
+            'fields': ('username', 'password1', 'password2', 'avatar',),
         }),
     )
     # inlines = (UserImageStackedInline,)
     list_display = ('username', 'email', 'first_name', 'last_name', 'is_staff')
     search_fields = ('username', 'email', 'first_name', 'last_name')
     ordering = ('username',)
+
+
+@admin.register(SiteSettings)
+class SiteSettingsAdmin(ModelAdmin):
+    list_display = ['delivery_price']
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
 
 
 admin.site.unregister(Group)
