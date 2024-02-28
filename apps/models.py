@@ -4,8 +4,9 @@ from ckeditor.fields import RichTextField
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
 from django.db.models import CharField, IntegerField, PositiveIntegerField, TextChoices, ForeignKey, JSONField, \
-    BooleanField, TextField, Model, CASCADE, DateTimeField
+    BooleanField, TextField, Model, CASCADE, DateTimeField, SlugField
 from django.db.models import SET_NULL, DecimalField
+from django.utils.text import slugify
 from django.utils.timezone import now
 from django_resized import ResizedImageField
 from mptt import querysets
@@ -71,8 +72,10 @@ class User(AbstractUser):
 
 class Category(MPTTModel):
     name = CharField(max_length=25)
-    parent = TreeForeignKey('self', SET_NULL, 'category', null=True, blank=True)
-    image = ResizedImageField(size=[100, 100], upload_to='category_images/', null=True, blank=True)
+    slug = SlugField(max_length=25)
+    parent = TreeForeignKey('self', SET_NULL, related_name='subcategory', null=True, blank=True)
+    image = ResizedImageField(size=[100, 100], upload_to='category_images/', null=True, blank=True,
+                              default='user_avatars/banner_default.jpg')
 
     class Meta:
         verbose_name = 'Kategoriya'
@@ -80,6 +83,21 @@ class Category(MPTTModel):
 
     def __str__(self):
         return self.name
+
+    def _get_unique_slug(self):
+        slug = slugify(self.name)
+        unique_slug = slug
+        num = 1
+        while Product.objects.filter(slug=unique_slug).exists():
+            unique_slug = f'{slug}-{num}'
+            num += 1
+        return unique_slug
+
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        self.slug = self._get_unique_slug()
+        if force_update is True:
+            self.slug = slugify(self.name)
+        return super().save(force_insert, force_update, using, update_fields)
 
 
 class Product(BaseModel):
@@ -91,12 +109,28 @@ class Product(BaseModel):
     shipping = DecimalField(max_digits=9, decimal_places=2)
     quantity = PositiveIntegerField(default=0)
     category = ForeignKey('apps.Category', CASCADE, 'categories')
+    slug = SlugField(max_length=255)
 
     class Meta:
         verbose_name = 'Mahsulot'
         verbose_name_plural = 'Mahsulotlar'
 
+    def _get_unique_slug(self):
+        slug = slugify(self.name)
+        unique_slug = slug
+        num = 1
+        while Product.objects.filter(slug=unique_slug).exists():
+            unique_slug = f'{slug}-{num}'
+            num += 1
+        return unique_slug
+
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        self.slug = self._get_unique_slug()
+        if force_update is True:
+            self.slug = slugify(self.name)
+        return super().save(force_insert, force_update, using, update_fields)
+
+    def save_1(self, force_insert=False, force_update=False, using=None, update_fields=None):
         super().save(force_insert, force_update, using, update_fields)
         users_emails = list(User.objects.values_list('email', flat=True))
         send_new_product_notification.delay(users_emails, self.name, 'https://www.youtube.com/', )
