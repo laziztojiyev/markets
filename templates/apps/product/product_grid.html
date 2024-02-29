@@ -115,35 +115,35 @@
                                     </p>
                                 </div>
                             </div>
-                            <div class="d-flex flex-between-center px-3">
-                                <div><span class="fa fa-star text-warning"></span><span
-                                        class="fa fa-star text-warning"></span><span
-                                        class="fa fa-star text-warning"></span><span
-                                        class="fa fa-star text-warning"></span><span
-                                        class="fa fa-star text-300"></span><span class="ms-1">(8)</span>
-                                </div>
-                                <div>
-                                    <a class="btn btn-sm btn-falcon-default me-2"
-                                            {% if user.id|has_wishlist:product.id %}
-                                       style="background-color: red; color : white"
-                                            {% else %} style="background-color: white; color:black"
-                                            {% endif %}
-                                            {% if user.is_authenticated %}
-                                       href="{% url 'wishlist_create' product.id %}"
-                                            {% else %}
-                                       href="{% url 'login' %}"
-                                            {% endif %}
-                                       data-bs-toggle="tooltip" data-bs-placement="top"
-                                       title="Add to Wish List">
-                                        <span class="far fa-heart"></span>
-                                    </a>
-                                    <a class="btn btn-sm btn-falcon-default" href="#!"
-                                       data-bs-toggle="tooltip"
-                                       data-bs-placement="top" title="Add to Cart">
-                                        <span class="fas fa-cart-plus"></span>
-                                    </a>
-                                </div>
-                            </div>
+{#                            <div class="d-flex flex-between-center px-3">#}
+{#                                <div><span class="fa fa-star text-warning"></span><span#}
+{#                                        class="fa fa-star text-warning"></span><span#}
+{#                                        class="fa fa-star text-warning"></span><span#}
+{#                                        class="fa fa-star text-warning"></span><span#}
+{#                                        class="fa fa-star text-300"></span><span class="ms-1">(8)</span>#}
+{#                                </div>#}
+{#                                <div>#}
+{#                                    <a class="btn btn-sm btn-falcon-default me-2"#}
+{#                                            {% if user.id|has_wishlist:product.id %}#}
+{#                                       style="background-color: red; color : white"#}
+{#                                            {% else %} style="background-color: white; color:black"#}
+{#                                            {% endif %}#}
+{#                                            {% if user.is_authenticated %}#}
+{#                                       href="{% url 'wishlist_create' product.id %}"#}
+{#                                            {% else %}#}
+{#                                       href="{% url 'login' %}"#}
+{#                                            {% endif %}#}
+{#                                       data-bs-toggle="tooltip" data-bs-placement="top"#}
+{#                                       title="Add to Wish List">#}
+{#                                        <span class="far fa-heart"></span>#}
+{#                                    </a>#}
+{#                                    <a class="btn btn-sm btn-falcon-default" href="#!"#}
+{#                                       data-bs-toggle="tooltip"#}
+{#                                       data-bs-placement="top" title="Add to Cart">#}
+{#                                        <span class="fas fa-cart-plus"></span>#}
+{#                                    </a>#}
+{#                                </div>#}
+{#                            </div>#}
                         </div>
                     </div>
                 {% endfor %}

@@ -74,9 +74,9 @@
                         {#                        </a>#}
                         <!-- parent pages-->
                         {% for category in categories %}
-                            <a class="nav-link {% if category.subcategory.exists %}dropdown-indicator{% endif %}" href="#email" role="button"
+                            <a class="nav-link {% if category.subcategory.exists %}dropdown-indicator{% endif %}" href="#{{ category.slug }}" role="button"
                                data-bs-toggle="collapse" aria-expanded="false"
-                               aria-controls="email">
+                               aria-controls="{{ category.slug }}">
                                 <div class="d-flex align-items-center">
                                 <span class="nav-link-icon"><svg
                                         class="svg-inline--fa fa-envelope-open fa-w-16" aria-hidden="true"
@@ -87,10 +87,10 @@
                                     <span class="nav-link-text ps-1">{{ category.name }}</span>
                                 </div>
                             </a>
-                            <ul class="nav collapse false" id="email">
+                            <ul class="nav collapse false" id="{{ category.slug }}">
                                 {% for subcategory in category.subcategory.all %}
                                     <li class="nav-item ">
-                                        <a class="nav-link" href="#" aria-expanded="false">
+                                        <a class="nav-link" href="#{{ subcategory.name }}" aria-expanded="false">
                                             <div class="d-flex align-items-center">
                                                 <span class="nav-link-text ps-1">{{ subcategory.name }}</span>
                                             </div>
@@ -143,7 +143,7 @@
                         <form class="position-relative" data-bs-toggle="search" data-bs-display="static"
                               aria-expanded="false">
                             <input class="form-control search-input fuzzy-search" type="search"
-                                   placeholder="Search..." aria-label="Search">
+                                   placeholder="Search. .." aria-label="Search">
                             <svg class="svg-inline--fa fa-search fa-w-16 search-box-icon" aria-hidden="true"
                                  focusable="false" data-prefix="fas" data-icon="search" role="img"
                                  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg="">
@@ -598,7 +598,7 @@
                             href="https://themewagon.com">Themewagon</a></p>
                 </div>
                 <div class="col-12 col-sm-auto text-center">
-                    <p class="mb-0 text-600">v3.4.0</p>
+                    <p class="mb-0 text-600">Designed by Kholmatoff Dilmurod</p>
                 </div>
             </div>
         </footer>

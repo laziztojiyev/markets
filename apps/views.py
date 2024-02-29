@@ -39,6 +39,11 @@ class ProductDetailView(DetailView):
     model = Product
     template_name = 'apps/product/product_detail.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = Category.objects.filter(parent_id=None)
+        return context
+
 
 class ProductImageView(TemplateView):
     model = ProductImage
@@ -162,4 +167,3 @@ class OperatorView(ListView):
     model = WishList
     template_name = 'apps/auth/operators.html'
     context_object_name = 'operator'
-
