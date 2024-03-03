@@ -72,7 +72,7 @@ class User(AbstractUser):
 
 class Category(MPTTModel):
     name = CharField(max_length=25)
-    slug = SlugField(max_length=25, null=True, blank=True)
+    slug = SlugField(max_length=25, null=True, blank=True,unique=True)
     parent = TreeForeignKey('self', SET_NULL, related_name='subcategory', null=True, blank=True)
     image = ResizedImageField(size=[100, 100], upload_to='category_images/', null=True, blank=True,
                               default='user_avatars/banner_default.jpg')
@@ -109,7 +109,7 @@ class Product(BaseModel):
     shipping = DecimalField(max_digits=9, decimal_places=2)
     quantity = PositiveIntegerField(default=0)
     category = ForeignKey('apps.Category', CASCADE, 'categories')
-    slug = SlugField(max_length=255, null=True, blank=True)
+    slug = SlugField(max_length=255, null=True, blank=True,unique=True)
 
     class Meta:
         verbose_name = 'Mahsulot'
