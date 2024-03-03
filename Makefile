@@ -8,3 +8,6 @@ load_file:
 	python3 manage.py loaddata regions.json
 load_file1:
 	python3 manage.py loaddata districts.json
+
+create:
+	python3 manage.py createsuperuser

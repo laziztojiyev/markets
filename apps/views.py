@@ -35,6 +35,25 @@ class ProductListView(ListView):
         return context
 
 
+class MarketListView(ListView):
+    paginate_by = 9
+    model = Product
+    queryset = Product.objects.order_by('-id')
+    template_name = 'apps/product/market.html'
+    context_object_name = 'market_list'
+
+    def get_queryset(self):
+        category_id = self.request.GET.get('category', None)
+        if category_id:
+            return self.queryset.filter(category_id=category_id)
+        return super().get_queryset()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = Category.objects.filter(parent_id=None)
+        return context
+
+
 class ProductDetailView(DetailView):
     model = Product
     template_name = 'apps/product/product_detail.html'
