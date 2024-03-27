@@ -106,10 +106,10 @@ class Product(BaseModel):
     price = DecimalField(max_digits=9, decimal_places=2)
     discount = IntegerField(default=0)
     specifications = JSONField(null=True, blank=True)
-    shipping = DecimalField(max_digits=9, decimal_places=2)
     quantity = PositiveIntegerField(default=0)
     category = ForeignKey('apps.Category', CASCADE, 'categories')
     slug = SlugField(max_length=255, null=True, blank=True)
+    site_settings = ForeignKey('apps.SiteSettings', CASCADE, 'site_settings')
 
     class Meta:
         verbose_name = 'Mahsulot'
@@ -181,6 +181,9 @@ class Order(BaseModel):
 
 class SiteSettings(Model):
     delivery_price = DecimalField(max_digits=9, decimal_places=2)
+
+    def __str__(self):
+        return f'{self.delivery_price}'
 
 
 class Region(Model):
