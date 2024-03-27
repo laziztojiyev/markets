@@ -4,13 +4,12 @@ from django.urls import path
 
 from apps.views import ProductListView, ProductDetailView, LogoutView, RegisterView, ForgotPasswordView, \
     UserTemplateView, WishlistView, OrderView, ErrorPage404View, ErrorPage500View, UserUpdateView, \
-    ChangePasswordView, OrderedDetailView, WishlistPageView, DeleteWishlistView, OperatorView, MarketListView
+    ChangePasswordView, OrderedDetailView, WishlistPageView, DeleteWishlistView, OperatorView
 from root import settings
 
 urlpatterns = [
     path('', ProductListView.as_view(), name='product_list'),
-    path('market/', MarketListView.as_view(), name='market'),
-    path('product-detail/<str:slug>', ProductDetailView.as_view(), name='product_detail'),
+    path('product-detail/<int:pk>', ProductDetailView.as_view(), name='product_detail'),
     path('login', LoginView.as_view(template_name='apps/auth/login.html', next_page='product_list'), name='login'),
     path('logout', LogoutView.as_view(), name='logout'),
     path('register', RegisterView.as_view(), name='register'),
